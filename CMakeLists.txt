@@ -16,9 +16,60 @@ OPTION(USE_GOODBYE "Say goodbye" ON)
 # program and possibly other vars as well
 CONFIGURE_FILE(hello.h.in hello.h)
 
+# Specify search path for modules, semicolon-seperated list
+# SET(OpenCASCADE_DIR "/tmp/occt/")
+
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Check if the User defined the OCCT or OCE directory
+# OCE = Open Cascade Community Edition; OCCT is the original
+# Inspiration https://github.com/FreeCAD/FreeCAD/blob/5d49bf78de785a536f941f1a6d06d432582a95d3/cMake/FindOpenCasCade.cmake
+IF(NOT DEFINED OpenCASCADE_DIR)
+    # Check if we're running a mac
+    IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # Detect Homebrew - find the Homebrew Path
+        # Stolen from FreeCAD - SetupPython.cmake
+        FIND_PROGRAM(HOMEBREW_EXECUTABLE brew)
+        IF(EXISTS ${HOMEBREW_EXECUTABLE})
+            STRING(REPLACE "/bin/brew" ""
+                HOMEBREW_PREFIX ${HOMEBREW_EXECUTABLE})
+            MESSAGE(STATUS "Homebrew detected @${HOMEBREW_PREFIX}")
+        ENDIF()
+    # Might be Linux?
+    ELSEIF(UNIX)
+        SET(OpenCASCADE_DIR "/usr/local/share/cmake/")
+    # Might be Windows?
+    ELSEIF(WIN32)
+        # Update this if necessary
+        SET(OpenCASCADE_DIR "c:/xxxxx/share/cmake")
+    ENDIF()
+ENDIF()
+
+# Find packages, see available find
+# modules using `cmake --help-module-list`
+# and `cmake --help-module <MODULE>` to see
+# which variables will be exposed
+IF(NOT DEFINED OpenCASCADE_DIR)
+    # Check if we're running a mac
+    IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # Check if Homebrew has been found
+        IF(DEFINED HOMEBREW_PREFIX)
+            FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${HOMEBREW_PREFIX}/Cellar/opencascade/*)
+            message(STATUS "OpenCASCADE (OCCT) has been found.")
+            # Have a look at OpenCASCADEConfig.cmake what has been exposed
+            INCLUDE_DIRECTORIES(${OpenCASCADE_INCLUDE_DIR})
+        ENDIF()
+    ENDIF()
+ELSE()
+    # OpenCascade_DIR is defined
+    FIND_PACKAGE(OCE REQUIRED)
+    message(STATUS "-- OpenCASCADE Community Edition (OCE) has been found.")
+    # Have a look at OpenCASCADEConfig.cmake what has been exposed
+    INCLUDE_DIRECTORIES(${OCE_INCLUDE_DIR})
+ENDIF()
+
 
 # If option goodbye is set
 IF(USE_GOODBYE)
@@ -32,11 +83,16 @@ ENDIF()
 
 # Add out executable - using variables to 
 # refer to our ${PROJECT_NAME}
-ADD_EXECUTABLE(${PROJECT_NAME} hello.cpp)
+ADD_EXECUTABLE(${PROJECT_NAME} hello.cpp) 
 
 # Add the location src files
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
     ${EXTRA_LIBS}
+    TKernel
+    TKG2d
+    TKG3d
+    TKGeomBase
+    TKMath
 )
 
 # The configure file will be read in the 
@@ -44,11 +100,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
 # directory for Linker - should only be 
 # available to the current target!
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC
-    "${PROJECT_BINARY_DIR}"
+    ${PROJECT_BINARY_DIR}
     ${EXTRA_INCLUDES}
 )
-
-# Find packages, see available find
-# modules using `cmake --help-module-list`
-# and `cmake --help-module <MODULE>` to see
-# which variables will be exposed
