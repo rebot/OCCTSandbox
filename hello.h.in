@@ -1,0 +1,14 @@
+// Guard against multiple inclusion
+#ifndef HELLO_H
+#define HELLO_H 1
+
+// Copy the variable from cmake to the header file
+#cmakedefine AUTHOR "${AUTHOR}"
+#cmakedefine PROJECT_NAME "${PROJECT_NAME}"
+// Set the variable from cmake
+#cmakedefine01 USE_GOODBYE
+// You can also just substitute the values using @..@ or ${..}
+#define VERSION_MAJOR ${helloworld_VERSION_MAJOR}
+#define VERSION_MINOR ${helloworld_VERSION_MINOR}
+
+#endif
