@@ -36,7 +36,7 @@ To install `cmake`, please see the [official documentation](https://cmake.org/in
 Normally, `make` should come out of the box (I guess so...). To install `cmake`, you could also use snap (`snap install cmake`) to install the tool on Ubuntu. 
 
 Run the following:
-```shell
+```bash
 sudo apt update -qq
 sudo apt install -y liboce-*
 ```
@@ -46,7 +46,8 @@ sudo apt install -y liboce-*
 Install XCode (see the Apple [Developer website](https://developer.apple.com/xcode/)) and the command line utilities (`sudo xcode-select --install`). Make sure to have `cmake` installed as well. 
 
 Then, install *Homebrew* (see [official documentation](https://brew.sh/)), and run the following:
-```
+
+```bash
 brew install opencascade
 ```
 
@@ -59,7 +60,7 @@ After the installation, add the directory to your path.
 
 Add the following paths to `%PATH%`
 
-```shell
+```bash
 C:\Users\<user>\AppData\Local\MSYS2\usr\bin\
 C:\Users\<user>\AppData\Local\MSYS2\mingw64\bin\
 ```
@@ -73,12 +74,12 @@ To test if it's working, check if `make` and `gcc` are available using `where <c
 
 After installing the compiler, we'll install `cmake`. Download the `.zip` from their website and locate the extracted files inside the following path:
 
-```shell
+```bash
 C:\Users\<user>\AppData\Local\CMake\
 ```
 Add the following path to your `%PATH%`, see the method above:
 
-```shell
+```bash
 C:\Users\<user>\AppData\Local\CMake\bin
 ```
 Check if it's working: `where cmake`
@@ -89,33 +90,49 @@ Download the `.tgz` from the [official docs](https://dev.opencascade.org/release
 
 Move the files to:
 
-```shell
+```bash
 C:\Users\BEGILT\AppData\Local\OCCT
 ```
 Now, we need to compile the source data. However, Open Cascade depends on some other packages. 
 You can download a precompiled package from [their website](https://dev.opencascade.org/resources/download/3rd-party-components). **Freetype** is required. Download the `.7z` for **MinGW** and move the files to:
 
-```shell
+```bash
 # Add Freetype
 C:\Users\<user>\AppData\Local\Freetype
 ```
 You could also build the files from source, see the [guidelines](https://dev.opencascade.org/doc/overview/html/build_upgrade_building_3rdparty.html) on the website of Open Cascade.
 
 Follow the same procedure for **Tcl**, because it's also required! Store it in the following folder:
-```shell
+
+```bash
 # Add Freetype
 C:\Users\<user>\AppData\Local\Tcl
 ```
 
-The next step is to compile OCCT:
+The next step is to generate the build script for OCCT and compile the package (that might take a while!):
 
-```shell
+```bash
 cmake -G"MSYS Makefiles" -D USE_VTK=OFF -D USE_FREEIMAGE=OFF -D USE_D3D=OFF -D 3RDPARTY_FREETYPE_DIR="C:/Users/BEGILT/AppData/Local/Freetype" -D 3RDPARTY_TCL_DIR="C:/Users/BEGILT/AppData/Local/Tcl" -S . -B C:/OCCT
 ```
-The compilation is still a **WIP**
+
+After generating the build script, navigate to the build directory and build using make:
+
+```bash
+cd C:/OCCT && make
+```
+
+#### Update `CMakeLists.txt`
 
 Add the path to your `CMakeLists.txt` in order to find the OCCT installation during build.
 
 ## Inspiration
 
 I stumbled upon the *FindOpenCasCade.cmake* file by [FreeCAD](https://github.com/FreeCAD/FreeCAD/blob/5d49bf78de785a536f941f1a6d06d432582a95d3/cMake/FindOpenCasCade.cmake). This file contains a lot of intersting code I could use in this project. While FreeCAD depends on OCE, I adapted the script to search for OCCT on MacOS.
+
+## ToDo's
+
+- [x] Install instructions *Unix*
+- [x] Install instructions *MacOS*
+- [x] Install instructions *Windows*
+- [ ] Powershell/Bash script to simplify the installation
+- [ ] Simplify the `CMakeLists.txt` to accomodate the different platforms

@@ -51,7 +51,7 @@ IF(NOT DEFINED OpenCASCADE_DIR)
     # Might be Windows?
     ELSEIF(WIN32)
         # Update this if necessary
-        SET(OpenCASCADE_DIR "C:/Users/BEGILT/AppData/Local/OCCT")
+        SET(OpenCASCADE_DIR "C:/OCCT")
     ENDIF()
 ENDIF()
 
