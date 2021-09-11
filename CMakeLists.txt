@@ -34,41 +34,37 @@ SET(CMAKE_CXX_STANDARD_REQUIRED True)
 # Check if the User defined the OCCT or OCE directory
 # OCE = Open Cascade Community Edition; OCCT is the original
 # Inspiration https://github.com/FreeCAD/FreeCAD/blob/5d49bf78de785a536f941f1a6d06d432582a95d3/cMake/FindOpenCasCade.cmake
-IF(NOT DEFINED OpenCASCADE_DIR)
-    # Check if we're running a mac
-    IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        # Detect Homebrew - find the Homebrew Path
-        # Stolen from FreeCAD - SetupPython.cmake
-        FIND_PROGRAM(HOMEBREW_EXECUTABLE brew)
-        IF(EXISTS ${HOMEBREW_EXECUTABLE})
-            STRING(REPLACE "/bin/brew" ""
-                HOMEBREW_PREFIX ${HOMEBREW_EXECUTABLE})
-            MESSAGE(STATUS "Homebrew detected @${HOMEBREW_PREFIX}")
-        ENDIF()
-    # Might be Linux?
-    ELSEIF(UNIX)
-        SET(OpenCASCADE_DIR "/usr/local/share/cmake/")
-    # Might be Windows?
-    ELSEIF(WIN32)
-        # Update this if necessary
-        SET(OpenCASCADE_DIR "C:/OCCT")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    # Detect Homebrew - find the Homebrew Path
+    # Stolen from FreeCAD - SetupPython.cmake
+    FIND_PROGRAM(HOMEBREW_EXECUTABLE brew)
+    IF(EXISTS ${HOMEBREW_EXECUTABLE})
+        STRING(REPLACE "/bin/brew" ""
+            HOMEBREW_PREFIX ${HOMEBREW_EXECUTABLE})
+        MESSAGE(STATUS "Homebrew detected @${HOMEBREW_PREFIX}")
     ENDIF()
+# Might be Linux?
+ELSEIF(UNIX)
+    SET(OpenCASCADE_DIR "/usr/local/share/cmake/")
+# Might be Windows?
+ELSEIF(WIN32)
+    # Update this if necessary
+    SET(OpenCASCADE_DIR "C:/OCCT")
 ENDIF()
+
 
 # Find packages, see available find
 # modules using `cmake --help-module-list`
 # and `cmake --help-module <MODULE>` to see
 # which variables will be exposed
-IF(NOT DEFINED OpenCASCADE_DIR)
-    # Check if we're running a mac
-    IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        # Check if Homebrew has been found
-        IF(DEFINED HOMEBREW_PREFIX)
-            FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${HOMEBREW_PREFIX}/Cellar/opencascade/*)
-            message(STATUS "OpenCASCADE (OCCT) has been found.")
-            # Have a look at OpenCASCADEConfig.cmake what has been exposed
-            INCLUDE_DIRECTORIES(${OpenCASCADE_INCLUDE_DIR})
-        ENDIF()
+
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    # Check if Homebrew has been found
+    IF(DEFINED HOMEBREW_PREFIX)
+        FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${HOMEBREW_PREFIX}/Cellar/opencascade/*)
+        message(STATUS "OpenCASCADE (OCCT) has been found.")
+        # Have a look at OpenCASCADEConfig.cmake what has been exposed
+        INCLUDE_DIRECTORIES(${OpenCASCADE_INCLUDE_DIR})
     ENDIF()
 ELSE()
     # OpenCascade_DIR is defined
@@ -79,7 +75,7 @@ ELSE()
     IF(NOT OCE_FOUND)
         FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${OpenCASCADE_DIR}) 
     ENDIF()
-    message(STATUS "-- OpenCASCADE Community Edition (OCE) has been found.")
+    message(STATUS "OpenCASCADE Community Edition (OCE) has been found.")
     # Have a look at OpenCASCADEConfig.cmake what has been exposed
     INCLUDE_DIRECTORIES(${OCE_INCLUDE_DIR})
 ENDIF()
