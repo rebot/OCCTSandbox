@@ -23,9 +23,17 @@ While I'm not following the *best practices* at the moment, this might change in
 
 One of the dependencies is **Open Cascade** ofcourse. The installation procedure depends on the operating system you're running. Currently, I'm only including the installation process for linux and mac. 
 
-We need to distinguish OCE and OCCT, both related to Open Cascade Technology, but the first one is the Community Edition. It includes a couple of patches. However, the ease of installation depends on the operating system. OCE is very easy to install on Ubuntu, while OCCT is the easiest on MacOS.  
+We need to **distinguish OCE and OCCT**, both related to Open Cascade Technology, but the first one is the Community Edition. It includes a couple of patches. However, the ease of installation depends on the operating system. OCE is very easy to install on Ubuntu, while OCCT is the easiest on MacOS.  
+
+### Dependencies
+
+To build the code, you'll need a **compiler** like `gpp`, `make` and `cmake`.
+
+To install `cmake`, please see the [official documentation](https://cmake.org/install/).
 
 ### Ubuntu
+
+Normally, `make` should come out of the box (I guess so...). To install `cmake`, you could also use snap (`snap install cmake`) to install the tool on Ubuntu. 
 
 Run the following:
 ```shell
@@ -35,14 +43,56 @@ sudo apt install -y liboce-*
 
 ### MacOS
 
-First, install *Homebrew*, then run the following:
+Install XCode (see the Apple [Developer website](https://developer.apple.com/xcode/)) and the command line utilities (`sudo xcode-select --install`). Make sure to have `cmake` installed as well. 
+
+Then, install *Homebrew* (see [official documentation](https://brew.sh/)), and run the following:
 ```
 brew install opencascade
 ```
 
 ### Windows
 
-Work in progress...
+#### Installation of the **Compiler**   
+
+First, you need to isntall a C++ compiler. Follow the installation guide of [MSYS2](https://www.msys2.org/). 
+After the installation, add the directory to your path.
+
+Add the following paths to `%PATH%`
+
+```shell
+C:\Users\<user>\AppData\Local\MSYS2\usr\bin\
+C:\Users\<user>\AppData\Local\MSYS2\mingw64\bin\
+```
+In my case, I choose to install MSYS2 inside my user folder.
+
+<img src="./assets/img/add_to_path.png"/>
+
+To test if it's working, check if `make` and `gcc` are available using `where <command>`.
+
+#### Installation of `cmake`
+
+After installing the compiler, we'll install `cmake`. Download the `.zip` from their website and locate the extracted files inside the following path:
+
+```shell
+C:\Users\<user>\AppData\Local\CMake\
+```
+Add the following path to your `%PATH%`, see the method above:
+
+```shell
+C:\Users\<user>\AppData\Local\CMake\bin
+```
+Check if it's working: `where cmake`
+
+#### Installation of **OCCT**
+
+Download the `.tgz` from the [official docs](https://dev.opencascade.org/release) and uncompress the file. 
+
+Move the files to:
+
+```shell
+C:\Users\BEGILT\AppData\Local\OCCT
+```
+Add the path to your `CMakeLists.txt` in order to find the OCCT installation during build.
 
 ## Inspiration
 
