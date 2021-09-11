@@ -92,6 +92,28 @@ Move the files to:
 ```shell
 C:\Users\BEGILT\AppData\Local\OCCT
 ```
+Now, we need to compile the source data. However, Open Cascade depends on some other packages. 
+You can download a precompiled package from [their website](https://dev.opencascade.org/resources/download/3rd-party-components). **Freetype** is required. Download the `.7z` for **MinGW** and move the files to:
+
+```shell
+# Add Freetype
+C:\Users\<user>\AppData\Local\Freetype
+```
+You could also build the files from source, see the [guidelines](https://dev.opencascade.org/doc/overview/html/build_upgrade_building_3rdparty.html) on the website of Open Cascade.
+
+Follow the same procedure for **Tcl**, because it's also required! Store it in the following folder:
+```shell
+# Add Freetype
+C:\Users\<user>\AppData\Local\Tcl
+```
+
+The next step is to compile OCCT:
+
+```shell
+cmake -G"MSYS Makefiles" -D USE_VTK=OFF -D USE_FREEIMAGE=OFF -D USE_D3D=OFF -D 3RDPARTY_FREETYPE_DIR="C:/Users/BEGILT/AppData/Local/Freetype" -D 3RDPARTY_TCL_DIR="C:/Users/BEGILT/AppData/Local/Tcl" -S . -B C:/OCCT
+```
+The compilation is still a **WIP**
+
 Add the path to your `CMakeLists.txt` in order to find the OCCT installation during build.
 
 ## Inspiration

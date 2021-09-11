@@ -1,6 +1,14 @@
 # The cmake version - preferably = `cmake --version`
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
+# Check if it's a Windows
+IF(WIN32)
+    MESSAGE(STATUS "It's a Windows... Good luck fellas")
+    # Search the compilers installed by MSYS2
+    FIND_PROGRAM(CMAKE_C_COMPILER "gcc")
+    FIND_PROGRAM(CMAKE_CXX_COMPILER "g++")
+ENDIF()
+
 # The name of our program
 PROJECT(helloworld VERSION 0.1)
 
@@ -64,7 +72,13 @@ IF(NOT DEFINED OpenCASCADE_DIR)
     ENDIF()
 ELSE()
     # OpenCascade_DIR is defined
-    FIND_PACKAGE(OCE REQUIRED)
+    FIND_PACKAGE(OCE QUIET)
+    IF(NOT OCE_FOUND)
+        FIND_PACKAGE(OCE QUIET HINTS ${OpenCASCADE_DIR})
+    ENDIF()
+    IF(NOT OCE_FOUND)
+        FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${OpenCASCADE_DIR}) 
+    ENDIF()
     message(STATUS "-- OpenCASCADE Community Edition (OCE) has been found.")
     # Have a look at OpenCASCADEConfig.cmake what has been exposed
     INCLUDE_DIRECTORIES(${OCE_INCLUDE_DIR})
