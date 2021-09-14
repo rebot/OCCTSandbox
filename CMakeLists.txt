@@ -48,8 +48,8 @@ ELSEIF(UNIX)
     SET(OpenCASCADE_DIR "/usr/local/share/cmake/")
 # Might be Windows?
 ELSEIF(WIN32)
-    # Update this if necessary
-    SET(OpenCASCADE_DIR "C:/OCCT")
+    # Update this if necessary / C:/Users/BEGILT/AppData/Local/MSYS2/mingw64
+    SET(OpenCASCADE_DIR "C:/Users/BEGILT/AppData/Local/MSYS2/mingw64")
 ENDIF()
 
 
@@ -70,14 +70,25 @@ ELSE()
     # OpenCascade_DIR is defined
     FIND_PACKAGE(OCE QUIET)
     IF(NOT OCE_FOUND)
+        # First try... Maybe another UNIX path
         FIND_PACKAGE(OCE QUIET HINTS ${OpenCASCADE_DIR})
     ENDIF()
     IF(NOT OCE_FOUND)
+        # Second try... 
         FIND_PACKAGE(OpenCASCADE REQUIRED HINTS ${OpenCASCADE_DIR}) 
     ENDIF()
-    message(STATUS "OpenCASCADE Community Edition (OCE) has been found.")
+    
     # Have a look at OpenCASCADEConfig.cmake what has been exposed
-    INCLUDE_DIRECTORIES(${OCE_INCLUDE_DIR})
+    IF(OCE_FOUND)
+        # Check if OCE has been found
+        message(STATUS "OpenCASCADE Community Edition (OCE) has been found.")
+        INCLUDE_DIRECTORIES(${OCE_INCLUDE_DIR})
+    ENDIF()
+    IF(OpenCASCADE_FOUND)
+        # Check if OCCT has been found
+        message(STATUS "OpenCASCADE Technology (OCCT) has been found.")
+        INCLUDE_DIRECTORIES(${OpenCASCADE_INCLUDE_DIR})
+    ENDIF()
 ENDIF()
 
 

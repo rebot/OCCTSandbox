@@ -86,6 +86,10 @@ Check if it's working: `where cmake`
 
 #### Installation of **OCCT**
 
+##### Approach 1 : FAILED
+
+> This method has not completely failed. During the compilation of the script `hello.cpp`, I've got a warning about a package `libTKXSDRAW.dll.a` that was not found. I don't know why, but the file hasn't been compiled during the process. Possibly, it has to do with some options I set. However, I advise you to use method 2 since it doesn't require you to compile all code.
+
 Download the `.tgz` from the [official docs](https://dev.opencascade.org/release) and uncompress the file. 
 
 Move the files to:
@@ -121,9 +125,38 @@ After generating the build script, navigate to the build directory and build usi
 cd C:/OCCT && make
 ```
 
+After finishing the build process, navigate to `C:/OCCT` and run the following. 
+It's a tempory fix for a bug I was encountering.
+
+```bash
+#!/bin/bash
+mkdir -p "cmake"
+mv ./OpenCASCADE*.cmake ./cmake
+mv ./CMakeFiles/Export/cmake/OpenCASCADE*.cmake ./cmake
+sed -i 's:\\${OCCT_INSTALL_BIN_LETTER}::g' ./cmake/OpenCASCADE*-release.cmake
+```
+
+During the compilation of the script `hello.cpp`, I've got a warning about a package `libTKXSDRAW.dll.a` that was not found. I don't know why, but the file hasn't been compiled during the process. Possibly, it has to do with some options I set.
+
+##### Approach 2 : PASSED
+
+Open the *MSYS2 MinGW 64-bit* terminal. Run the following:
+
+```bash
+pacman -Syu
+# Install OpenCASCADE
+pacman -S mingw-w64-x86_64-opencascade
+```
+
+After installation, fix the bug like in approach 1.
+
+```bash
+sed -i 's:\\${OCCT_INSTALL_BIN_LETTER}::g' C:/Users/<username>/AppData/Local/MSYS2/mingw64/lib/cmake/opencascade/OpenCASCADE*-release.cmake
+```
+
 #### Update `CMakeLists.txt`
 
-Add the path to your `CMakeLists.txt` in order to find the OCCT installation during build.
+Add the path to your `CMakeLists.txt` in order to find the OCCT installation during build. In case of approach 1, this is `C:/OCCT` and in case of approach 2 it's `C:/Users/<username>/AppData/Local/MSYS2/mingw64/`.
 
 ## Inspiration
 
