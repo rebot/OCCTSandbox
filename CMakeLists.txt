@@ -114,6 +114,9 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
     TKG3d
     TKGeomBase
     TKMath
+    TKPrim
+    TKBO
+    TKSTEP
 )
 
 # The configure file will be read in the 
