@@ -117,6 +117,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
     TKPrim
     TKBO
     TKSTEP
+    TKSTL
+    TKMesh
 )
 
 # The configure file will be read in the 
